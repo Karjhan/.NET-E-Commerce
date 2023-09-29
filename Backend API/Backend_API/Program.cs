@@ -1,4 +1,6 @@
 using Backend_API.DataContexts;
+using Core.Interfaces;
+using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,11 +12,16 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-//Add entity dbContext for app, add sqlite connection for dbContext
+// Add repositories and services as scoped
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+
+// Add entity dbContext for app, add sqlite connection for dbContext
 builder.Services.AddDbContext<StoreContext>(options =>
 {
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+
 
 var app = builder.Build();
 
@@ -28,5 +35,20 @@ if (app.Environment.IsDevelopment())
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Auto applying new migrations at build+run, or creating the DB otherwise + initial seeding
+using var scope = app.Services.CreateScope();
+var services = scope.ServiceProvider;
+var context = services.GetRequiredService<StoreContext>();
+var logger = services.GetRequiredService<ILogger<Program>>();
+try
+{
+    await context.Database.MigrateAsync();
+    await StoreContextSeed.SeedAsync(context);
+}
+catch (Exception e)
+{
+    logger.LogError(e, "An error occured during migration!");
+}
 
 app.Run();

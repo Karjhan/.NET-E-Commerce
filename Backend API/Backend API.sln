@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Backend API", "Backend API\Backend API.csproj", "{9E70EAE8-438A-4EDD-80DB-5D0AA6C15B28}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Backend_API", "Backend_API\Backend_API.csproj", "{9E70EAE8-438A-4EDD-80DB-5D0AA6C15B28}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{D398D7A5-FCC2-43C0-BC38-A68435F052B4}"
 EndProject
