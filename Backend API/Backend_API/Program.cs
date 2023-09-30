@@ -13,7 +13,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Add repositories and services as scoped
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
+// builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
+// Add AutoMapper service for automatic mapping (ex: entity -> DTO)
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // Add entity dbContext for app, add sqlite connection for dbContext
 builder.Services.AddDbContext<StoreContext>(options =>
@@ -31,6 +35,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// Configure app to serve static files (default: wwwroot)
+app.UseStaticFiles();
 
 app.UseAuthorization();
 
