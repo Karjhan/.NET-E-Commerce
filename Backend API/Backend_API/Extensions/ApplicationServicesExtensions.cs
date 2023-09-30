@@ -42,6 +42,14 @@ public static class ApplicationServicesExtensions
         {
             options.UseSqlite(configuration.GetConnectionString("DefaultConnection"));
         });
+        // Add CORS service for Angular client server
+        services.AddCors(options =>
+        {
+            options.AddPolicy("CorsPolicy", policy =>
+            {
+                policy.AllowAnyHeader().AllowAnyMethod().WithOrigins(configuration["ClientURL"]);
+            });
+        });
         return services;
     }
 }

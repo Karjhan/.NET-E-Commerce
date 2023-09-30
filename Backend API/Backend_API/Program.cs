@@ -24,6 +24,9 @@ if (app.Environment.IsDevelopment())
 // Configure app to serve static files (default: wwwroot)
 app.UseStaticFiles();
 
+// Using CORS
+app.UseCors("CorsPolicy");
+
 app.UseAuthorization();
 
 app.MapControllers();

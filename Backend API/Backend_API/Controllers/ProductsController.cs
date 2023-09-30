@@ -3,15 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using Backend_API.DataContexts;
 using Backend_API.DTO;
 using Backend_API.Entities;
 using Backend_API.Errors;
+using Backend_API.Helpers;
 using Core.Interfaces;
 using Core.Specifications;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Backend_API.Controllers
 {
@@ -33,16 +31,14 @@ namespace Backend_API.Controllers
         
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(APIResponse),StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IReadOnlyList<ProductDTO>>> GetProducts()
+        public async Task<ActionResult<Pagination<ProductDTO>>> GetProducts([FromQuery]ProductSpecificationParams productParams)
         {
-            ISpecification<Product> specification = new ProductsWithTypesAndBrandsSpecification();
+            ISpecification<Product> specification = new ProductsWithTypesAndBrandsSpecification(productParams);
+            ISpecification<Product> countSpecification = new ProductWithFiltersForCountSpecification(productParams);
+            int totalItems = await _productRepository.CountAsync(countSpecification);
             IReadOnlyList<Product> result = await _productRepository.ListAllAsync(specification);
-            if (result.Count == 0)
-            {
-                return NotFound(new APIResponse(404));
-            }
-            return Ok(_mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductDTO>>(result));
+            IReadOnlyList<ProductDTO> data = _mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductDTO>>(result);
+            return Ok(new Pagination<ProductDTO>(productParams.PageIndex, productParams.PageSize, totalItems, data));
         }
         
         [HttpGet("{id}")]
