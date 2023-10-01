@@ -4,6 +4,7 @@ using Core.Interfaces;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using StackExchange.Redis;
 
 namespace Backend_API.Extensions;
 
@@ -17,7 +18,14 @@ public static class ApplicationServicesExtensions
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
         // Add repositories and services as scoped
+        // Add Redis singleton in-memory DB service (has to survive throughout thread activity)
+        services.AddSingleton<IConnectionMultiplexer>(c =>
+        {
+            var options = ConfigurationOptions.Parse(configuration.GetConnectionString("Redis"));
+            return ConnectionMultiplexer.Connect(options);
+        });
         // builder.Services.AddScoped<IProductRepository, ProductRepository>();
+        services.AddScoped<IBasketRepository, BasketRepository>();
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         // Add AutoMapper service for automatic mapping (ex: entity -> DTO)
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
