@@ -1,6 +1,7 @@
 ﻿using Backend_API.DataContexts;
 using Backend_API.Entities;
 using Backend_API.Errors;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Backend_API.Controllers;
@@ -13,6 +14,13 @@ public class BuggyController : BaseAPIController
     public BuggyController(StoreContext context)
     {
         _context = context;
+    }
+
+    [HttpGet("testauth")]
+    [Authorize]
+    public ActionResult<string> GetSecretText()
+    {
+        return "here is your secret!";
     }
 
     [HttpGet("notfound")]

@@ -12,7 +12,7 @@ public class StoreContext : DbContext
     
     public DbSet<ProductBrand> ProductBrands { get; set; }
     
-    public StoreContext(DbContextOptions options) : base(options)
+    public StoreContext(DbContextOptions<StoreContext> options) : base(options)
     {
         
     }
