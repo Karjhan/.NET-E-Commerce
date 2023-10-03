@@ -13,9 +13,6 @@ public static class ApplicationServicesExtensions
 {
     public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
     {
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-        services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen();
         // Add repositories and services as scoped
         // Add Redis singleton in-memory DB service (has to survive throughout thread activity)
         services.AddSingleton<IConnectionMultiplexer>(c =>
