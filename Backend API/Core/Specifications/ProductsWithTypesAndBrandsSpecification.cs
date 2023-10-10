@@ -1,5 +1,4 @@
-﻿using System.Linq.Expressions;
-using Backend_API.Entities;
+﻿using Backend_API.Entities;
 
 namespace Core.Specifications;
 
