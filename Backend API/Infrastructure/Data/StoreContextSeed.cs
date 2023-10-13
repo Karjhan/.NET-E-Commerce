@@ -2,6 +2,7 @@
 using System.Text.Json;
 using Backend_API.DataContexts;
 using Backend_API.Entities;
+using Backend_API.Entities.OrderAggregate;
 
 namespace Infrastructure.Data;
 
@@ -27,6 +28,12 @@ public class StoreContextSeed
             var productsData = File.ReadAllText("../Infrastructure/Data/SeedData/products.json");
             var products = JsonSerializer.Deserialize<List<Product>>(productsData);
             await context.Products.AddRangeAsync(products);
+        }
+        if (!context.DeliveryMethods.Any())
+        {
+            var deliveryData = File.ReadAllText("../Infrastructure/Data/SeedData/delivery.json");
+            var deliveryMethods = JsonSerializer.Deserialize<List<DeliveryMethod>>(deliveryData);
+            await context.DeliveryMethods.AddRangeAsync(deliveryMethods);
         }
 
         if (context.ChangeTracker.HasChanges())

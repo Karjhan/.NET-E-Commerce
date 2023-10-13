@@ -3,7 +3,7 @@ using Core.Specifications;
 
 namespace Core.Interfaces;
 
-public interface IGenericRepository<T> where T : BaseEntity
+public interface IGenericRepository<T>
 {
     public Task<T?> GetByIdAsync(int id);
     
@@ -13,5 +13,11 @@ public interface IGenericRepository<T> where T : BaseEntity
 
     public Task<IReadOnlyList<T>> ListAllAsync(ISpecification<T> specification);
 
-    public Task<int> CountAsync(ISpecification<T> specification); 
+    public Task<int> CountAsync(ISpecification<T> specification);
+
+    void Add(T entity);
+
+    void Update(T entity);
+
+    void Delete(T entity);
 }
