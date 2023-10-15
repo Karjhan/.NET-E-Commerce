@@ -8,12 +8,10 @@ import { Order } from 'src/app/shared/models/order';
   styleUrls: ['./checkout-success.component.scss']
 })
 export class CheckoutSuccessComponent {
-
   order?: Order;
 
   constructor(private router: Router) {
     const navigation = this.router.getCurrentNavigation();
     this.order = navigation?.extras?.state as Order
   }
-  
 }
