@@ -30,14 +30,26 @@ public class OrderService : IOrderService
         }
         DeliveryMethod deliveryMethod = await _unitOfWork.Repository<DeliveryMethod>().GetByIdAsync(deliveryMethodId);
         decimal subtotal = items.Sum(item => item.Price * item.Quantity);
-        Order order = new Order(items, buyerEmail, shippingAddress, deliveryMethod, subtotal);
-        _unitOfWork.Repository<Order>().Add(order);
+        OrderByPaymentIntentIdSpecification specification = new OrderByPaymentIntentIdSpecification(basket.PaymentIntentId);
+        Order order = await _unitOfWork.Repository<Order>().GetEntityWithSpecification(specification);
+        if (order != null)
+        {
+            order.ShipToAddress = shippingAddress;
+            order.DeliveryMethod = deliveryMethod;
+            order.Subtotal = subtotal;
+            _unitOfWork.Repository<Order>().Update(order);
+        }
+        else
+        {
+            order = new Order(items, buyerEmail, shippingAddress, deliveryMethod, subtotal, basket.PaymentIntentId);
+            _unitOfWork.Repository<Order>().Add(order);
+        }
         var result = await _unitOfWork.Complete();
         if (result <= 0)
         {
             return null;
         }
-        await _basketRepository.DeleteBasketAsync(basketId);
+        // await _basketRepository.DeleteBasketAsync(basketId);
         return order;
     }
 

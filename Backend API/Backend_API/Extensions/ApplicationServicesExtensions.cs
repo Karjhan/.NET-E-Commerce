@@ -26,6 +26,7 @@ public static class ApplicationServicesExtensions
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         services.AddScoped<IOrderService, OrderService>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<IPaymentService, PaymentService>();
         // Add AutoMapper service for automatic mapping (ex: entity -> DTO)
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         // Overwritting ApiController behaviour 

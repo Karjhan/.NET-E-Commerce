@@ -1,6 +1,7 @@
 using Backend_API.DataContexts;
 using Backend_API.Entities.Identity;
 using Backend_API.Extensions;
+using Backend_API.Helpers;
 using Backend_API.Middlewares;
 using Infrastructure.Data;
 using Infrastructure.Identity;
@@ -14,6 +15,9 @@ builder.Services.AddControllers();
 builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddIdentityServices(builder.Configuration);
 builder.Services.AddSwaggerDocumentation();
+
+//Add startup hosted service (background tasks)
+builder.WebHost.ConfigureServices(services => services.AddHostedService<StartupHosted>());
 
 var app = builder.Build();
 
